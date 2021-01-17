@@ -185,6 +185,7 @@ protected:
 	bool m_FirstShot;
 	vec2 m_FirstShotCoord;
 	int m_HookDmgTick;
+	int m_NextDryingTick;
 	int m_InvisibleTick;
 	bool m_IsInvisible;
 	int m_HealTick;
@@ -199,7 +200,6 @@ protected:
 	int m_CursorID;
 	int m_AntiFireTime;
 	
-	bool m_Leaping;
 	bool m_IsFrozen;
 	int m_FrozenTime;
 	bool m_IsInSlowMotion; //LooperClass changes here
@@ -218,6 +218,9 @@ protected:
 	bool m_canOpenPortals = false;
 	CPortal *m_pPortalIn = nullptr;
 	CPortal *m_pPortalOut = nullptr;
+
+	bool m_Leaping = false;
+	vec2 m_LeapingTargetPosition;
 
 public:
 	int m_PositionLockTick;
@@ -276,6 +279,9 @@ public:
 	void GiveGift(int GiftType);
 	int GetInfZoneTick();
 	void EnableJump();
+
+	void LeapToTarget(CCharacter *pTarget);
+	void HandleDrying();
 /* INFECTION MODIFICATION END *****************************************/
 
 	CCharacterCore *Core() { return &m_Core; }

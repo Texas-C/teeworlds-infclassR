@@ -570,6 +570,9 @@ void CInfClassCharacter::OnHammerFired(WeaponFireContext *pFireContext)
 						pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_Config.m_InfBatDamage,
 							m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
 					}
+					else if(GetPlayerClass() == PLAYERCLASS_JOCKEY) {
+						ShowAttackAnimation = false;
+					}
 					else if(GameServer()->m_pController->IsInfectionStarted())
 					{
 						pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_pData->m_Weapons.m_Hammer.m_pBase->m_Damage,
@@ -1415,6 +1418,9 @@ CGameContext *CInfClassCharacter::GameContext() const
 
 bool CInfClassCharacter::CanDie() const
 {
+	if ((GetPlayerClass() == PLAYERCLASS_JOCKEY) && m_Core.m_IsPassenger) {
+		return false;
+	}
 	if ((GetPlayerClass() == PLAYERCLASS_UNDEAD) && IsFrozen()) {
 		return false;
 	}
