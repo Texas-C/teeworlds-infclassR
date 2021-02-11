@@ -231,7 +231,7 @@ void CGrowingExplosion::Tick()
 								
 								if(random_prob(0.1f))
 								{
-									GameServer()->CreateSound(EndPoint, SOUND_RIFLE_BOUNCE);
+									GameServer()->CreateSound(EndPoint, SOUND_LASER_BOUNCE);
 								}
 							}
 							break;

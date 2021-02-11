@@ -617,7 +617,7 @@ void CCharacter::FireWeapon()
 	bool AutoFire = false;
 	bool FullAuto = false;
 	
-	if(m_ActiveWeapon == WEAPON_GUN || m_ActiveWeapon == WEAPON_GRENADE || m_ActiveWeapon == WEAPON_SHOTGUN || m_ActiveWeapon == WEAPON_RIFLE)
+	if(m_ActiveWeapon == WEAPON_GUN || m_ActiveWeapon == WEAPON_GRENADE || m_ActiveWeapon == WEAPON_SHOTGUN || m_ActiveWeapon == WEAPON_LASER)
 		FullAuto = true;
 
 	if(GetClass() == PLAYERCLASS_SLUG && m_ActiveWeapon == WEAPON_HAMMER)
@@ -637,7 +637,7 @@ void CCharacter::FireWeapon()
 	if(!WillFire || m_pPlayer->MapMenu() > 0)
 		return;
 
-	if (GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_WITCH_PORTAL_RIFLE && FindPortalInTarget())
+	if (GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_WITCH_PORTAL_LASER && FindPortalInTarget())
 	{
 		// Give the ammo in advance for portal taking
 		GiveWeapon(m_ActiveWeapon, m_aWeapons[m_ActiveWeapon].m_Ammo + 1);
@@ -655,7 +655,7 @@ void CCharacter::FireWeapon()
 		}
 		return;
 	}
-	if(GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_BIOLOGIST_RIFLE && m_aWeapons[m_ActiveWeapon].m_Ammo < 10)
+	if(GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_BIOLOGIST_LASER && m_aWeapons[m_ActiveWeapon].m_Ammo < 10)
 	{
 		// 125ms is a magical limit of how fast a human can click
 		m_ReloadTimer = 125 * Server()->TickSpeed() / 1000;
@@ -706,7 +706,7 @@ void CCharacter::FireWeapon()
 						
 						new CEngineerWall(GameWorld(), m_FirstShotCoord, m_Pos, m_pPlayer->GetCID());
 						
-						GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+						GameServer()->CreateSound(m_Pos, SOUND_LASER_FIRE);
 					}
 				}
 			}
@@ -743,7 +743,7 @@ void CCharacter::FireWeapon()
 						
 						new CLooperWall(GameWorld(), m_FirstShotCoord, m_Pos, m_pPlayer->GetCID());
 						
-						GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+						GameServer()->CreateSound(m_Pos, SOUND_LASER_FIRE);
 					}
 				}
 			}
@@ -1351,7 +1351,7 @@ void CCharacter::FireWeapon()
 			}
 		} break;
 
-		case WEAPON_RIFLE:
+		case WEAPON_LASER:
 		{
 			if(GetClass() == PLAYERCLASS_BIOLOGIST)
 			{
@@ -1365,8 +1365,8 @@ void CCharacter::FireWeapon()
 				if(GameServer()->Collision()->IntersectLine(m_Pos, To, 0x0, &To))
 				{
 					new CBiologistMine(GameWorld(), m_Pos, To, m_pPlayer->GetCID());
-					GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
-					m_aWeapons[WEAPON_RIFLE].m_Ammo = 0;
+					GameServer()->CreateSound(m_Pos, SOUND_LASER_FIRE);
+					m_aWeapons[WEAPON_LASER].m_Ammo = 0;
 				}
 				else
 					return;
@@ -1390,20 +1390,20 @@ void CCharacter::FireWeapon()
 					else
 						Damage = random_int(10, 13);
 					new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID(), Damage);
-					GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+					GameServer()->CreateSound(m_Pos, SOUND_LASER_FIRE);
 				}
 				else if(GetClass() == PLAYERCLASS_SCIENTIST)
 				{
 					//white hole activation in scientist-laser
 					
 					new CScientistLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach*0.6f, m_pPlayer->GetCID(), Damage);
-					GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+					GameServer()->CreateSound(m_Pos, SOUND_LASER_FIRE);
 				}
 				else if (GetClass() == PLAYERCLASS_LOOPER) 
 				{
 					Damage = 5;
 					new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach*0.7f, m_pPlayer->GetCID(), Damage);
-					GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+					GameServer()->CreateSound(m_Pos, SOUND_LASER_FIRE);
 				}
 				else if(GetClass() == PLAYERCLASS_MERCENARY)
 				{
@@ -1428,10 +1428,10 @@ void CCharacter::FireWeapon()
 					else
 					{
 						new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID(), Damage);
-						GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+						GameServer()->CreateSound(m_Pos, SOUND_LASER_FIRE);
 						if(m_BombHit && distance(pCurrentBomb->m_Pos, m_AtMercBomb) <= 80.0f)
 						{
-							pCurrentBomb->IncreaseDamage(WEAPON_RIFLE);
+							pCurrentBomb->IncreaseDamage(WEAPON_LASER);
 							GameServer()->CreateSound(m_Pos, SOUND_PICKUP_ARMOR);
 						}
 					}
@@ -1439,7 +1439,7 @@ void CCharacter::FireWeapon()
 				else
 				{
 					new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID(), Damage);
-					GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+					GameServer()->CreateSound(m_Pos, SOUND_LASER_FIRE);
 				}
 		
 			}
@@ -1530,7 +1530,7 @@ void CCharacter::PlacePortal()
 		if (PortalToTake == m_pPortalOut)
 			m_pPortalOut = nullptr;
 
-		GiveWeapon(WEAPON_RIFLE, m_aWeapons[WEAPON_RIFLE].m_Ammo + 1);
+		GiveWeapon(WEAPON_LASER, m_aWeapons[WEAPON_LASER].m_Ammo + 1);
 		return;
 	}
 
@@ -1725,7 +1725,7 @@ void CCharacter::HandleWeapons()
 
 	// ammo regen
 /* INFECTION MODIFICATION START ***************************************/
-	for(int i=WEAPON_GUN; i<=WEAPON_RIFLE; i++)
+	for(int i=WEAPON_GUN; i<=WEAPON_LASER; i++)
 	{
 		int InfWID = GetInfWeaponID(i);
 		int AmmoRegenTime = Server()->GetAmmoRegenTime(InfWID);
@@ -1799,8 +1799,8 @@ void CCharacter::RemoveAllGun()
 {
 	m_aWeapons[WEAPON_GUN].m_Got = false;
 	m_aWeapons[WEAPON_GUN].m_Ammo = 0;
-	m_aWeapons[WEAPON_RIFLE].m_Got = false;
-	m_aWeapons[WEAPON_RIFLE].m_Ammo = 0;
+	m_aWeapons[WEAPON_LASER].m_Got = false;
+	m_aWeapons[WEAPON_LASER].m_Ammo = 0;
 	m_aWeapons[WEAPON_GRENADE].m_Got = false;
 	m_aWeapons[WEAPON_GRENADE].m_Ammo = 0;
 	m_aWeapons[WEAPON_SHOTGUN].m_Got = false;
@@ -2522,7 +2522,7 @@ void CCharacter::Tick()
 	}
 	else if(GetClass() == PLAYERCLASS_MEDIC)
 	{
-		if(m_ActiveWeapon == WEAPON_RIFLE)
+		if(m_ActiveWeapon == WEAPON_LASER)
 		{
 			const int MIN_ZOMBIES = 4;
 			const int DAMAGE_ON_REVIVE = 17;
@@ -2722,7 +2722,7 @@ void CCharacter::Tick()
 		{
 			float BombLevel = pCurrentBomb->m_Damage/static_cast<float>(g_Config.m_InfMercBombs);
 
-			if(m_ActiveWeapon == WEAPON_RIFLE)
+			if(m_ActiveWeapon == WEAPON_LASER)
 			{
 				if(BombLevel < 1.0)
 				{
@@ -2756,7 +2756,7 @@ void CCharacter::Tick()
 		}
 		else
 		{
-			if(m_ActiveWeapon == WEAPON_RIFLE)
+			if(m_ActiveWeapon == WEAPON_LASER)
 			{
 				GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
 					_("Use the hammer to place a bomb and\n"
@@ -2843,43 +2843,43 @@ void CCharacter::GiveGift(int GiftType)
 	switch(GetClass())
 	{
 		case PLAYERCLASS_ENGINEER:
-			GiveWeapon(WEAPON_RIFLE, -1);
+			GiveWeapon(WEAPON_LASER, -1);
 			break;
 		case PLAYERCLASS_SOLDIER:
 			GiveWeapon(WEAPON_GRENADE, -1);
 			break;
 		case PLAYERCLASS_SCIENTIST:
 			GiveWeapon(WEAPON_GRENADE, -1);
-			GiveWeapon(WEAPON_RIFLE, -1);
+			GiveWeapon(WEAPON_LASER, -1);
 			break;
 		case PLAYERCLASS_BIOLOGIST:
-			GiveWeapon(WEAPON_RIFLE, -1);
+			GiveWeapon(WEAPON_LASER, -1);
 			GiveWeapon(WEAPON_SHOTGUN, -1);
 			break;
 		case PLAYERCLASS_LOOPER:
-			GiveWeapon(WEAPON_RIFLE, -1);
+			GiveWeapon(WEAPON_LASER, -1);
 			GiveWeapon(WEAPON_GRENADE, -1);
 			break;
 		case PLAYERCLASS_MEDIC:
 			GiveWeapon(WEAPON_SHOTGUN, -1);
 			GiveWeapon(WEAPON_GRENADE, -1);
-			GiveWeapon(WEAPON_RIFLE, -1);
+			GiveWeapon(WEAPON_LASER, -1);
 			break;
 		case PLAYERCLASS_HERO:
 			GiveWeapon(WEAPON_SHOTGUN, -1);
 			GiveWeapon(WEAPON_GRENADE, -1);
-			GiveWeapon(WEAPON_RIFLE, -1);
+			GiveWeapon(WEAPON_LASER, -1);
 			break;
 		case PLAYERCLASS_NINJA:
 			GiveWeapon(WEAPON_GRENADE, -1);
 			break;
 		case PLAYERCLASS_SNIPER:
-			GiveWeapon(WEAPON_RIFLE, -1);
+			GiveWeapon(WEAPON_LASER, -1);
 			break;
 		case PLAYERCLASS_MERCENARY:
 			GiveWeapon(WEAPON_GUN, -1);
 			GiveWeapon(WEAPON_GRENADE, -1);
-			GiveWeapon(WEAPON_RIFLE, -1);
+			GiveWeapon(WEAPON_LASER, -1);
 			break;
 	}
 }
@@ -3167,7 +3167,7 @@ void CCharacter::Die(int Killer, int Weapon)
 
 			if(pKillerPlayer->GetClass() == PLAYERCLASS_MERCENARY)
 			{
-				pKillerCharacter->GiveWeapon(WEAPON_RIFLE, m_aWeapons[WEAPON_RIFLE].m_Ammo + 3);
+				pKillerCharacter->GiveWeapon(WEAPON_LASER, m_aWeapons[WEAPON_LASER].m_Ammo + 3);
 			}
 		}
 	}
@@ -3255,8 +3255,8 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		}
 	}
 
-	// slow down zombies that get hit by looper rifle
-	if(pKillerPlayer && pKillerPlayer->GetClass() == PLAYERCLASS_LOOPER && Weapon == WEAPON_RIFLE && IsZombie()) { 
+	// slow down zombies that get hit by looper laser
+	if(pKillerPlayer && pKillerPlayer->GetClass() == PLAYERCLASS_LOOPER && Weapon == WEAPON_LASER && IsZombie()) { 
 		SlowMotionEffect(g_Config.m_InfSlowMotionGunDuration);
 		if (g_Config.m_InfSlowMotionGunDuration != 0) GameServer()->SendEmoticon(GetPlayer()->GetCID(), EMOTICON_EXCLAMATION);	
 	}
@@ -3496,7 +3496,7 @@ void CCharacter::Snap(int SnappingClient)
 				pObj->m_Type = WEAPON_HAMMER;
 			}
 		}
-		else if((GetClass() == PLAYERCLASS_WITCH) && ((m_ActiveWeapon == WEAPON_RIFLE) || ((m_ActiveWeapon == WEAPON_HAMMER) && !HasPortal())))
+		else if((GetClass() == PLAYERCLASS_WITCH) && ((m_ActiveWeapon == WEAPON_LASER) || ((m_ActiveWeapon == WEAPON_HAMMER) && !HasPortal())))
 		{
 			vec2 SpawnPos;
 			if(FindWitchSpawnPosition(SpawnPos))
@@ -3729,8 +3729,8 @@ void CCharacter::ClassSpawnAttributes()
 			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_HAMMER, -1);
 			GiveWeapon(WEAPON_GUN, -1);
-			GiveWeapon(WEAPON_RIFLE, -1);
-			m_ActiveWeapon = WEAPON_RIFLE;
+			GiveWeapon(WEAPON_LASER, -1);
+			m_ActiveWeapon = WEAPON_LASER;
 			break;
 		case PLAYERCLASS_SOLDIER:
 			m_aWeapons[WEAPON_HAMMER].m_Got = true;
@@ -3745,38 +3745,38 @@ void CCharacter::ClassSpawnAttributes()
 			GiveWeapon(WEAPON_GRENADE, -1);
 			GiveWeapon(WEAPON_GUN, -1);
 			if(!GameServer()->m_FunRound)
-				GiveWeapon(WEAPON_RIFLE, -1);
+				GiveWeapon(WEAPON_LASER, -1);
 			m_ActiveWeapon = WEAPON_GUN;
 			break;
 		case PLAYERCLASS_SNIPER:
 			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_HAMMER, -1);
 			GiveWeapon(WEAPON_GUN, -1);
-			GiveWeapon(WEAPON_RIFLE, -1);
-			m_ActiveWeapon = WEAPON_RIFLE;
+			GiveWeapon(WEAPON_LASER, -1);
+			m_ActiveWeapon = WEAPON_LASER;
 			break;
 		case PLAYERCLASS_SCIENTIST:
 			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_HAMMER, -1);
 			GiveWeapon(WEAPON_GUN, -1);
-			GiveWeapon(WEAPON_RIFLE, -1);
+			GiveWeapon(WEAPON_LASER, -1);
 			GiveWeapon(WEAPON_GRENADE, -1);
-			m_ActiveWeapon = WEAPON_RIFLE;
+			m_ActiveWeapon = WEAPON_LASER;
 			break;
 		case PLAYERCLASS_BIOLOGIST:
 			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_HAMMER, -1);
 			GiveWeapon(WEAPON_GUN, -1);
-			GiveWeapon(WEAPON_RIFLE, -1);
+			GiveWeapon(WEAPON_LASER, -1);
 			GiveWeapon(WEAPON_SHOTGUN, -1);
 			m_ActiveWeapon = WEAPON_SHOTGUN;
 			break;
 		case PLAYERCLASS_LOOPER:
 			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_HAMMER, -1);
-			GiveWeapon(WEAPON_RIFLE, -1);
+			GiveWeapon(WEAPON_LASER, -1);
 			GiveWeapon(WEAPON_GRENADE, -1);
-			m_ActiveWeapon = WEAPON_RIFLE;
+			m_ActiveWeapon = WEAPON_LASER;
 			break;
 		case PLAYERCLASS_MEDIC:
 			m_aWeapons[WEAPON_HAMMER].m_Got = true;
@@ -3784,14 +3784,14 @@ void CCharacter::ClassSpawnAttributes()
 			GiveWeapon(WEAPON_GUN, -1);
 			GiveWeapon(WEAPON_SHOTGUN, -1);
 			GiveWeapon(WEAPON_GRENADE, -1);
-			GiveWeapon(WEAPON_RIFLE, -1);
+			GiveWeapon(WEAPON_LASER, -1);
 			m_ActiveWeapon = WEAPON_SHOTGUN;
 			break;
 		case PLAYERCLASS_HERO:
 			m_aWeapons[WEAPON_HAMMER].m_Got = false;
 			GiveWeapon(WEAPON_GUN, -1);
 			GiveWeapon(WEAPON_SHOTGUN, -1);
-			GiveWeapon(WEAPON_RIFLE, -1);
+			GiveWeapon(WEAPON_LASER, -1);
 			GiveWeapon(WEAPON_GRENADE, -1);
 			m_pHeroFlag = nullptr;
 			m_ActiveWeapon = WEAPON_GRENADE;
@@ -3863,7 +3863,7 @@ void CCharacter::ClassSpawnAttributes()
 			GiveWeapon(WEAPON_HAMMER, -1);
 			m_canOpenPortals = GameServer()->m_pController->PortalsAvailableForCharacter(this);
 			if (CanOpenPortals())
-				GiveWeapon(WEAPON_RIFLE, -1);
+				GiveWeapon(WEAPON_LASER, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
 			
 			break;
@@ -4162,30 +4162,30 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_GRENADE;
 		}
 	}
-	else if(WID == WEAPON_RIFLE)
+	else if(WID == WEAPON_LASER)
 	{
 		switch(GetClass())
 		{
 			case PLAYERCLASS_ENGINEER:
-				return INFWEAPON_ENGINEER_RIFLE;
+				return INFWEAPON_ENGINEER_LASER;
 			case PLAYERCLASS_LOOPER:
-				return INFWEAPON_LOOPER_RIFLE;
+				return INFWEAPON_LOOPER_LASER;
 			case PLAYERCLASS_SCIENTIST:
-				return INFWEAPON_SCIENTIST_RIFLE;
+				return INFWEAPON_SCIENTIST_LASER;
 			case PLAYERCLASS_SNIPER:
-				return INFWEAPON_SNIPER_RIFLE;
+				return INFWEAPON_SNIPER_LASER;
 			case PLAYERCLASS_HERO:
-				return INFWEAPON_HERO_RIFLE;
+				return INFWEAPON_HERO_LASER;
 			case PLAYERCLASS_BIOLOGIST:
-				return INFWEAPON_BIOLOGIST_RIFLE;
+				return INFWEAPON_BIOLOGIST_LASER;
 			case PLAYERCLASS_MEDIC:
-				return INFWEAPON_MEDIC_RIFLE;
+				return INFWEAPON_MEDIC_LASER;
 			case PLAYERCLASS_WITCH:
-				return INFWEAPON_WITCH_PORTAL_RIFLE;
+				return INFWEAPON_WITCH_PORTAL_LASER;
 			case PLAYERCLASS_MERCENARY:
-				return INFWEAPON_MERCENARY_RIFLE;
+				return INFWEAPON_MERCENARY_LASER;
 			default:
-				return INFWEAPON_RIFLE;
+				return INFWEAPON_LASER;
 		}
 	}
 	else if(WID == WEAPON_NINJA)
