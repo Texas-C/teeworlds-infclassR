@@ -3,19 +3,16 @@
 #ifndef GAME_SERVER_ENTITIES_TURRET_H
 #define GAME_SERVER_ENTITIES_TURRET_H
 
-#include <game/server/entity.h>
+#include "infcentity.h"
 
-class CTurret : public CEntity
+class CTurret : public CInfCEntity
 {
 public:
-	CTurret(CGameWorld *pGameWorld, vec2 Pos, int Owner, vec2 Direction, float StartEnergy, int Type);
+	CTurret(CGameContext *pGameContext, vec2 Pos, int Owner, vec2 Direction, float StartEnergy, int Type);
 	virtual ~CTurret();
-	
-	virtual void Reset();
+
 	virtual void Tick();
 	virtual void Snap(int SnappingClient);
-	
-	int GetOwner() const;
 
 protected:
 	void AttackTargets();
