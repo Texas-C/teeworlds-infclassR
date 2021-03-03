@@ -1305,6 +1305,10 @@ void CCharacter::OnGrenadeFired(bool *pFireAccepted)
 
 			m_ReloadTimer = Server()->TickSpeed()/4;
 		}
+		else
+		{
+			m_aWeapons[m_ActiveWeapon].m_Ammo++;
+		}
 	}
 	else if(GetClass() == PLAYERCLASS_MEDIC)
 	{
