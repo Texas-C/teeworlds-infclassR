@@ -136,6 +136,7 @@ void CGrowingExplosion::Tick()
 	}
 	
 	bool NewTile = false;
+	static const bool c_DontDamage = true;
 	
 	for(int j=0; j<m_GrowingMap_Length; j++)
 	{
@@ -226,6 +227,9 @@ void CGrowingExplosion::Tick()
 									GameServer()->CreateSound(EndPoint, SOUND_RIFLE_BOUNCE);
 								}
 							}
+							break;
+						case GROWINGEXPLOSIONEFFECT_HIT_EFFECT:
+							GameServer()->CreateExplosion(TileCenter, m_Owner, WEAPON_HAMMER, c_DontDamage);
 							break;
 					}
 				}

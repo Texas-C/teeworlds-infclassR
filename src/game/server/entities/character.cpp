@@ -27,6 +27,7 @@
 #include <game/server/infclass/entities/merc-bomb.h>
 #include <game/server/infclass/entities/plasma.h>
 #include <game/server/infclass/entities/portal.h>
+#include <game/server/infclass/entities/rocket.h>
 #include <game/server/infclass/entities/scatter-grenade.h>
 #include <game/server/infclass/entities/scientist-laser.h>
 #include <game/server/infclass/entities/scientist-mine.h>
@@ -1266,8 +1267,23 @@ void CCharacter::OnGrenadeFired(bool *pFireAccepted)
 {
 	vec2 Direction = GetDirection();
 	vec2 ProjStartPos = GetPos()+Direction*GetProximityRadius()*0.75f;
-	
-	if(GetClass() == PLAYERCLASS_MERCENARY)
+
+	if (GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_ROCKET)
+	{
+		CRocket *pRocket = new CRocket(GameServer(), m_pPlayer->GetCID(), ProjStartPos, Direction);
+		// pack the Projectile and send it to the client Directly
+		CNetObj_Projectile p;
+		pRocket->FillInfo(&p);
+
+		CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
+		Msg.AddInt(1);
+		for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
+			Msg.AddInt(((int *)&p)[i]);
+		Server()->SendMsg(&Msg, MSGFLAG_VITAL, m_pPlayer->GetCID());
+
+		GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
+	}
+	else if(GetClass() == PLAYERCLASS_MERCENARY)
 	{
 		//Find bomb
 		bool BombFound = false;
@@ -3952,6 +3968,34 @@ int CCharacter::GetInfWeaponID(int WID)
 	}
 	else if(WID == WEAPON_GRENADE)
 	{
+		if(g_Config.m_InfRocketMode == 1)
+		{
+			switch(GetClass())
+			{
+			case PLAYERCLASS_MERCENARY:
+				return INFWEAPON_MERCENARY_GRENADE;
+			case PLAYERCLASS_MEDIC:
+				return INFWEAPON_MEDIC_GRENADE;
+			case PLAYERCLASS_NINJA:
+				return INFWEAPON_NINJA_GRENADE;
+			case PLAYERCLASS_SCIENTIST:
+				return INFWEAPON_SCIENTIST_GRENADE;
+			default:
+				return INFWEAPON_ROCKET;
+			}
+		}
+
+		if(g_Config.m_InfRocketMode == 2)
+		{
+			switch(GetClass())
+			{
+			case PLAYERCLASS_MERCENARY:
+				return INFWEAPON_ROCKET;
+			default:
+				break;
+			}
+		}
+
 		switch(GetClass())
 		{
 			case PLAYERCLASS_MERCENARY:
