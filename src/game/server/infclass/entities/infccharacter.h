@@ -61,7 +61,7 @@ public:
 
 	void CheckSuperWeaponAccess();
 	void MaybeGiveStunGrenades();
-	void FireSoldierBomb();
+	void FireSoldierBomb(WeaponFireContext *pFireContext);
 	void PlacePortal(WeaponFireContext *pFireContext);
 	CPortal *FindPortalInTarget();
 	void OnPortalDestroy(CPortal *pPortal);

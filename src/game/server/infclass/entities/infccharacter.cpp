@@ -79,6 +79,11 @@ void CInfClassCharacter::FireWeapon()
 	if(m_ActiveWeapon == WEAPON_GUN || m_ActiveWeapon == WEAPON_GRENADE || m_ActiveWeapon == WEAPON_SHOTGUN || m_ActiveWeapon == WEAPON_RIFLE)
 		FullAuto = true;
 
+	if((GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_SOLDIER_GRENADE) && (Config()->m_InfSoldierMode == 1))
+	{
+		FullAuto = false;
+	}
+
 	if(GetPlayerClass() == PLAYERCLASS_SLUG && m_ActiveWeapon == WEAPON_HAMMER)
 		FullAuto = true;
 
@@ -272,7 +277,7 @@ void CInfClassCharacter::OnHammerFired(WeaponFireContext *pFireContext)
 	}
 	else if(GetPlayerClass() == PLAYERCLASS_SOLDIER)
 	{
-		FireSoldierBomb();
+		FireSoldierBomb(pFireContext);
 	}
 	else if(GetPlayerClass() == PLAYERCLASS_SNIPER)
 	{
@@ -705,6 +710,12 @@ void CInfClassCharacter::OnGrenadeFired(WeaponFireContext *pFireContext)
 	if(GetPlayerClass() == PLAYERCLASS_MEDIC)
 	{
 		OnMedicGrenadeFired(pFireContext);
+		return;
+	}
+
+	if((GetPlayerClass() == PLAYERCLASS_SOLDIER) && (Config()->m_InfSoldierMode == 1))
+	{
+		FireSoldierBomb(pFireContext);
 		return;
 	}
 
@@ -1429,8 +1440,10 @@ void CInfClassCharacter::MaybeGiveStunGrenades()
 	}
 }
 
-void CInfClassCharacter::FireSoldierBomb()
+void CInfClassCharacter::FireSoldierBomb(WeaponFireContext *pFireContext)
 {
+	// We have this reload for Hammer bombs
+	m_ReloadTimer = 125 * Server()->TickSpeed() / 1000;
 	vec2 ProjStartPos = GetPos()+GetDirection()*GetProximityRadius()*0.75f;
 
 	for(CSoldierBomb *pBomb = (CSoldierBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_SOLDIER_BOMB); pBomb; pBomb = (CSoldierBomb*) pBomb->TypeNext())
@@ -1438,8 +1451,15 @@ void CInfClassCharacter::FireSoldierBomb()
 		if(pBomb->GetOwner() == m_pPlayer->GetCID())
 		{
 			pBomb->Explode();
+			pFireContext->AmmoConsumed = 0;
+			pFireContext->NoAmmo = false;
 			return;
 		}
+	}
+
+	if(pFireContext->NoAmmo)
+	{
+		return;
 	}
 
 	new CSoldierBomb(GameServer(), ProjStartPos, m_pPlayer->GetCID());

@@ -26,10 +26,18 @@ void CInfClassHuman::GiveClassAttributes()
 			m_pCharacter->SetActiveWeapon(WEAPON_RIFLE);
 			break;
 		case PLAYERCLASS_SOLDIER:
-			m_pCharacter->GiveWeapon(WEAPON_HAMMER, -1);
 			m_pCharacter->GiveWeapon(WEAPON_GUN, -1);
 			m_pCharacter->GiveWeapon(WEAPON_GRENADE, -1);
-			m_pCharacter->SetActiveWeapon(WEAPON_GRENADE);
+			if(Config()->m_InfSoldierMode == 0)
+			{
+				m_pCharacter->GiveWeapon(WEAPON_HAMMER, -1);
+				m_pCharacter->SetActiveWeapon(WEAPON_GRENADE);
+			}
+			else
+			{
+				m_pCharacter->GiveWeapon(WEAPON_SHOTGUN, -1);
+				m_pCharacter->SetActiveWeapon(WEAPON_SHOTGUN);
+			}
 			break;
 		case PLAYERCLASS_MERCENARY:
 			m_pCharacter->GiveWeapon(WEAPON_HAMMER, -1);
