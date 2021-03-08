@@ -1416,8 +1416,8 @@ void CInfClassCharacter::CheckSuperWeaponAccess()
 	{
 		MaybeGiveStunGrenades();
 	}
-	
-	if(GetPlayerClass() == PLAYERCLASS_SOLDIER)
+
+	if((GetPlayerClass() == PLAYERCLASS_SOLDIER) && (Config()->m_InfSoldierMode == 0))
 	{
 		MaybeGiveStunGrenades();
 	}
