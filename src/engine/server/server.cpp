@@ -1851,7 +1851,7 @@ int CServer::LoadMap(const char *pMapName)
 		
 		CDataFileReader dfClientMap;
 		//The map is already converted
-		if(dfClientMap.Open(Storage(), aClientMapName, IStorage::TYPE_ALL))
+		if(0) //dfClientMap.Open(Storage(), aClientMapName, IStorage::TYPE_ALL))
 		{
 			m_CurrentMapCrc = dfClientMap.Crc();
 			dfClientMap.Close();
