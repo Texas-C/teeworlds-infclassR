@@ -53,6 +53,7 @@ public:
 	static const char *GetClassDisplayName(int PlayerClass, const char *pDefaultText = nullptr);
 	static const char *GetClassPluralDisplayName(int PlayerClass);
 	static int MenuClassToPlayerClass(int MenuClass);
+	static int PlayerClassToMenuClass(int PlayerClass);
 
 	void RegisterChatCommands(class IConsole *pConsole) override;
 

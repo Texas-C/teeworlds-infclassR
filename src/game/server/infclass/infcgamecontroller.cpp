@@ -486,6 +486,11 @@ int CInfClassGameController::MenuClassToPlayerClass(int MenuClass)
 	return PlayerClass;
 }
 
+int CInfClassGameController::PlayerClassToMenuClass(int PlayerClass)
+{
+	return 0;
+}
+
 void CInfClassGameController::RegisterChatCommands(IConsole *pConsole)
 {
 	pConsole->Register("inf_set_class", "is", CFGFLAG_SERVER, ConSetClass, this, "Set the class of a player");
