@@ -1764,7 +1764,7 @@ void CInfClassCharacter::UpdateTuningParam()
 
 	if(GetPlayerClass() == PLAYERCLASS_JOCKEY)
 	{
-		if(m_Core.m_IsPassenger || m_Leaping)
+		if(m_Core.m_IsPassenger || (m_Leaping && m_Core.m_HookedPlayer >= 0))
 		{
 			pTuningParams->m_HookDragAccel = 0;
 			pTuningParams->m_HookDragSpeed = 0;
