@@ -199,6 +199,7 @@ protected:
 	int m_CursorID;
 	int m_AntiFireTime;
 	
+	bool m_Leaping;
 	bool m_IsFrozen;
 	int m_FrozenTime;
 	bool m_IsInSlowMotion; //LooperClass changes here

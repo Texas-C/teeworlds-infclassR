@@ -1745,7 +1745,17 @@ void CInfClassCharacter::UpdateTuningParam()
 	{
 		pTuningParams->m_PlayerHooking = 0;
 	}
-	
+
+	if(GetPlayerClass() == PLAYERCLASS_JOCKEY)
+	{
+		if((m_Core.m_HookedPlayer >= 0) || (m_Leaping))
+		{
+			pTuningParams->m_HookDragAccel = 0;
+			pTuningParams->m_HookDragSpeed = 0;
+			pTuningParams->m_Gravity = 0.0f;
+		}
+	}
+
 	if(GetPlayerClass() == PLAYERCLASS_GHOUL)
 	{
 		float Factor = GetClass()->GetGhoulPercent();
