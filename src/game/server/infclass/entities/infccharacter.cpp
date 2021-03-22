@@ -28,6 +28,7 @@
 #include <game/server/infclass/entities/soldier-bomb.h>
 #include <game/server/infclass/entities/superweapon-indicator.h>
 #include <game/server/infclass/entities/turret.h>
+#include <game/server/infclass/entities/voltage-box.h>
 #include <game/server/infclass/entities/white-hole.h>
 #include <game/server/infclass/infcgamecontroller.h>
 #include <game/server/infclass/infcplayer.h>
@@ -321,6 +322,11 @@ void CInfClassCharacter::OnHammerFired(WeaponFireContext *pFireContext)
 				GameServer()->CreateSound(GetPos(), SOUND_LASER_FIRE);
 			}
 		}
+	}
+	else if(GetPlayerClass() == PLAYERCLASS_ELECTRICIAN)
+	{
+		new CVoltageBox(GameServer(), GetPos(), m_pPlayer->GetCID());
+		GameServer()->CreateSound(GetPos(), SOUND_LASER_FIRE);
 	}
 	else if(GetPlayerClass() == PLAYERCLASS_LOOPER)
 	{
