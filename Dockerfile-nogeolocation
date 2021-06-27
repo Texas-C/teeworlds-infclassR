@@ -7,7 +7,7 @@ COPY . .
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
 RUN apk update && apk upgrade
 RUN apk add --no-cache openssl gcc g++ make cmake python bam icu-dev libmaxminddb-dev
-RUN bam server_release
+RUN bam server_release nogeolocation=true
 
 # production enviroment (alpine
 FROM alpine:3.4 AS production
